@@ -57,7 +57,7 @@ const appKey = 'TwUQ01lKS1Km5zlV2f7amsZc5EQYkTbv'
 const taskList = [
   { taskName: "逛全网最低好物会场", taskType: "LLQWZDJ", time: 11 },
   { taskName: "浏览热销爆品1", taskType: "TZSPXQ2", time: 3 },
-  { taskName: "浏览热销爆品2", taskType: "TZSPXQ1", time: 3 },
+  { taskName: "浏览热销爆品2", taskType: "TZSPXQ3", time: 3 },
   { taskName: "滑动浏览精选超值好物", taskType: "LLQDYSPL", time: 16 },
   { taskName: "购买任意商品1次", taskType: "YXXD", time: 3 },
   { taskName: "查看优惠券", taskType: "LLYHJ", time: 3 },

@@ -61,8 +61,8 @@ const taskList = [
   { taskName: "滑动浏览精选超值好物", taskType: "LLQDYSPL", time: 16 },
   { taskName: "购买任意商品1次", taskType: "YXXD", time: 3 },
   { taskName: "浏览热销爆品3", taskType: "TZSPXQ1", time: 3 },
-  { taskName: "购买任意商品1次", taskType: "YXXD", time: 11 },
-//   { taskName: "补签赚积分", taskType: "YXBQ", time: 3 },
+  { taskName: "浏览儿童玩具早教机", taskType: "TZSPXQ4", time: 3 },
+  { taskName: "浏览爆品好物", taskType: "TZSPXQ5", time: 3 },
 //   { taskName: "补签赚积分", taskType: "YXBQ", time: 3 } // 执行两次
 ]
 //---------------------- 脚本入口函数 -----------------------------------

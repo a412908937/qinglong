@@ -63,7 +63,7 @@ const taskList = [
   { taskName: "浏览热销爆品3", taskType: "TZSPXQ1", time: 3 },
   { taskName: "浏览儿童玩具早教机", taskType: "TZSPXQ4", time: 3 },
   { taskName: "浏览爆品好物", taskType: "TZSPXQ5", time: 3 },
-//   { taskName: "补签赚积分", taskType: "YXBQ", time: 3 } // 执行两次
+  // { taskName: "下单返积分", taskType: "XDFJF", time: 3 } // 执行两次
 ]
 //---------------------- 脚本入口函数 -----------------------------------
 async function main() {
@@ -140,31 +140,81 @@ class UserInfo {
   }
   
   // 签到
+  // async signin() {
+  //   try {
+  //     const { fhNonceStr, fhTimestamp, fhSign } = getSignature();
+  //     const opts = {
+  //       url: '/member/signin/getSignInfo',
+  //       type: "get",
+  //       params: {
+  //         signType: 1
+  //       },
+  //       headers: Object.assign({}, this.headers, {
+  //         fhNonceStr,
+  //         fhTimestamp,
+  //         fhSign
+  //       })
+  //     }
+  //     const res = await this.fetch(opts);
+  //     const {signPop} = res?.data;
+  //     const point = signPop ? signPop?.signPoint : 0;
+  //     debug(res, `今日签到`)
+  //     $.log(`✅ ${res?.code == '200' ? point == 0 ? '今日已签到，请勿重复执行' : `签到完成, 获取积分: ${point}分` : res?.msg}\n`);
+  //   } catch (e) {
+  //     this.ckStatus = false;
+  //     $.log(`⛔️ 执行任务今日签到失败! ${e}`);
+  //   }
+  // }
   async signin() {
-    try {
-      const { fhNonceStr, fhTimestamp, fhSign } = getSignature();
-      const opts = {
-        url: '/member/signin/getSignInfo',
-        type: "get",
-        params: {
-          signType: 1
-        },
-        headers: Object.assign({}, this.headers, {
-          fhNonceStr,
-          fhTimestamp,
-          fhSign
-        })
-      }
-      const res = await this.fetch(opts);
-      const {signPop} = res?.data;
-      const point = signPop ? signPop?.signPoint : 0;
-      debug(res, `今日签到`)
-      $.log(`✅ ${res?.code == '200' ? point == 0 ? '今日已签到，请勿重复执行' : `签到完成, 获取积分: ${point}分` : res?.msg}\n`);
-    } catch (e) {
-      this.ckStatus = false;
-      $.log(`⛔️ 执行任务今日签到失败! ${e}`);
+  try {
+    const { fhNonceStr, fhTimestamp, fhSign } = getSignature();
+
+    // ✅ 1. 发起真正签到请求
+    const signOpts = {
+      url: '/member/signin/sign',
+      type: "post",
+      headers: Object.assign({}, this.headers, {
+        fhNonceStr,
+        fhTimestamp,
+        fhSign
+      }),
+      body: {} // 请求体是一个空 JSON 对象
+    };
+
+    const signRes = await this.fetch(signOpts);
+    const success = signRes?.code === '200';
+    const msg = signRes?.msg || '无响应';
+
+    if (success) {
+      $.log(`✅ 签到成功: ${msg}`);
+    } else {
+      $.log(`❌ 签到失败: ${msg}`);
+      return;
     }
+
+    // ✅ 2. 可选：再查一次当前积分信息（如果你想继续保留 getSignInfo）
+    const infoOpts = {
+      url: '/member/signin/getSignInfo',
+      type: "get",
+      params: {
+        signType: 1
+      },
+      headers: Object.assign({}, this.headers, {
+        fhNonceStr,
+        fhTimestamp,
+        fhSign
+      })
+    };
+
+    const res = await this.fetch(infoOpts);
+    const point = res?.data?.signPop?.signPoint ?? 0;
+    $.log(`🎁 当前积分: ${point}`);
+
+  } catch (e) {
+    this.ckStatus = false;
+    $.log(`⛔️ 执行任务今日签到失败! ${e}`);
   }
+}
   // 执行任务
   async tofinish(taskName, taskType) {
     try {
